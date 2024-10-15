@@ -46,12 +46,29 @@ model.predict(X_test)
 inference_time = time.time() - start_time
 print(f'Original Inference Time: {inference_time:.6f} seconds')
 
-# Part 4: Quantize the Model
+# Part 4: Quantize the Model with Normalization
 def quantize_model(model, scale_factor=128):
     # Get the model's weights
     weights = model.coef_
+    
+    # Initialize an array for quantized weights
+    quantized_weights = np.zeros_like(weights, dtype=np.int8)
+    
     # Quantize weights to 8-bit
-    quantized_weights = np.round(weights * scale_factor).astype(np.int8)
+    for i in range(weights.shape[0]):  # For each class
+        param = weights[i]  # Get the coefficients for class i
+        
+        # Normalize the parameters to the range [-1, 1]
+        param_max = np.max(np.abs(param))
+        if param_max != 0:  # Avoid division by zero
+            normalized_param = param / param_max
+        else:
+            normalized_param = param
+        
+        # Scale to [-scale_factor, scale_factor] and convert to int8
+        scaled_param = np.clip(np.round(normalized_param * scale_factor), -128, 127).astype(np.int8)
+        quantized_weights[i] = scaled_param
+    
     return quantized_weights
 
 quantized_weights = quantize_model(model)

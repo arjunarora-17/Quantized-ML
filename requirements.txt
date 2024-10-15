@@ -1,5 +1,6 @@
-numpy @ file:///croot/numpy_and_numpy_base_1728047641896/work/dist/numpy-2.1.1-cp312-cp312-linux_x86_64.whl#sha256=86608ab8112d507b12cec0f4a11913f9d4916df2216a74a89af4e1932f62bd1d
+numpy==2.1.1
 torch==2.4.1
 torchaudio==2.4.1
 torchvision==0.19.1
+scikit-learn
 
